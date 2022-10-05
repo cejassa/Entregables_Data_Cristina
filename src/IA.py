@@ -89,7 +89,6 @@ class IA:
                     return self.disparar_maquina(tablero_maquina, tablero_local)
 
         elif self.estado_ia == IA.Estado_IA.SIGUIENDO_ORIENTACION:
-            print("-- Estado IA: SIGUIENDO ORIENTACION")
 
             fila = self.ultimo_disparo_ia[0]
             columna = self.ultimo_disparo_ia[1]
