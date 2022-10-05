@@ -9,7 +9,6 @@ import IA
 from IA import IA
 
 
-# TO-DO: IMPRIMIR POSICION DE DISPARO DE LA MAQUINA EN CADA TURNO
 class Juego:
     filas = 10
     columnas = 10
@@ -30,9 +29,11 @@ class Juego:
     def crear_juego(self):
         Juego.mostrar_mensaje_bienvenida()
         self.crear_barcos()
+        print("\nTablero de barcos jugador local: ")
         self.tablero_local_barcos.imprimir()
         print()
         Juego.mensaje_post_colocacion()
+        print("\nTablero de disparos jugador local: ")
         self.tablero_local_disparos.imprimir()
 
     # Función para que empiece a disparar el jugador o la máquina
@@ -182,10 +183,15 @@ Vas a jugar al juego de "Hundir la flota". Ten en cuenta que:
 
     # FUNCIÓN PARA CREAR EL BARCO CON COORDENADAS MANUALES DENTRO DE LOS LÍMITES DEL TABLERO
     def crear_barcos_manuales(self, tablero, barcos):  
-        longitudes = self.longitudes
+        longitudes_disponibles = Juego.longitudes.copy()
 
-        while len(longitudes) > 0:
-            long_barco = int(input("Introduce la longitud de tu barco, recuerda que estas son las longitudes disponibles: " + str(longitudes) + " "))
+        while len(longitudes_disponibles) > 0:
+
+            long_barco = -1
+            while long_barco not in longitudes_disponibles:
+                long_barco = int(input("Introduce la longitud de tu barco, recuerda que estas son las longitudes disponibles: " + str(longitudes_disponibles) + " "))
+                if(long_barco not in longitudes_disponibles):
+                    print("Longitud invalida, por favor introduce alguna de las siguientes longitudes disponibles: ", longitudes_disponibles)
 
             posicion_valida = False
             while posicion_valida == False:
@@ -201,12 +207,12 @@ Vas a jugar al juego de "Hundir la flota". Ten en cuenta que:
                     pregunta_columna = "¿En qué columna quieres empezar a colocar tu barco? "
 
                 fila = int(input(pregunta_fila))
-                if tablero.fila_valida_manual(fila) == False:
+                if tablero.fila_valida(fila-1) == False:
                     print("La fila introducida es inválida, por favor, introduce una entre 1 y ", Juego.filas)
                     continue
 
                 columna = int(input(pregunta_columna))
-                if tablero.columna_valida_manual(columna) == False:
+                if tablero.columna_valida(columna-1) == False:
                     print("La columna introducida es inválida, por favor, introduce una entre 1 y ", Juego.columnas)
                     continue
 
@@ -215,11 +221,7 @@ Vas a jugar al juego de "Hundir la flota". Ten en cuenta que:
                     max_fila = fila -1
                     min_columna = columna -1 
                     max_columna = columna -1
-
-                    barco_manual = Barco(min_fila, max_fila, min_columna, max_columna)
-                    self.colocar_barco(tablero, barco_manual)
-
-                if long_barco > 1:
+                else:
                     min_fila = 0
                     max_fila = 0
                     min_columna = 0
@@ -230,7 +232,7 @@ Vas a jugar al juego de "Hundir la flota". Ten en cuenta que:
                         min_fila = (fila -(long_barco - 1)) -1
                         max_fila = fila -1
                         min_columna = max_columna = columna -1
-                        if tablero.fila_valida_manual(min_fila) == False:
+                        if tablero.fila_valida(min_fila-1) == False:
                             print("La combinación de coordenadas, orientación y longitud no son válidas.")
                             continue
                     
@@ -238,7 +240,7 @@ Vas a jugar al juego de "Hundir la flota". Ten en cuenta que:
                         max_fila = (fila +(long_barco - 1)) - 1
                         min_fila = fila -1
                         max_columna = min_columna = columna -1
-                        if tablero.fila_valida_manual(max_fila) == False:
+                        if tablero.fila_valida(max_fila-1) == False:
                             print("La combinación de coordenadas, orientación y longitud no son válidas.")
                             continue
 
@@ -246,7 +248,7 @@ Vas a jugar al juego de "Hundir la flota". Ten en cuenta que:
                         max_columna = (columna +(long_barco - 1)) -1
                         min_columna = columna -1
                         max_fila = min_fila = fila -1
-                        if tablero.columna_valida_manual(max_columna) == False:
+                        if tablero.columna_valida(max_columna-1) == False:
                             print("La combinación de coordenadas, orientación y longitud no son válidas.")
                             continue
 
@@ -254,23 +256,22 @@ Vas a jugar al juego de "Hundir la flota". Ten en cuenta que:
                         min_fila = max_fila = fila -1
                         min_columna = (columna -(long_barco - 1)) -1
                         max_columna = columna -1
-                        if tablero.columna_valida_manual(min_columna) == False: 
+                        if tablero.columna_valida(min_columna-1) == False: 
                             print("La combinación de coordenadas, orientación y longitud no son válidas.")
                             continue
                     
                     # Si en el rango del barco hay algo diferente a agua, vuelve a empezar el bucle
                     if not tablero.rango_igual_a_valor(Tablero.agua, min_fila, max_fila, min_columna, max_columna):
+                        print("La combinación de coordenadas, orientación y longitud no son válidas.")
                         continue
                 
-                longitudes.remove(long_barco) # Para ver las longitudes de los barcos que nos quedan
+                longitudes_disponibles.remove(long_barco) # Para ver las longitudes de los barcos que nos quedan
                 posicion_valida = True # Fin del bucle
 
                 barco_manual = Barco(min_fila, max_fila, min_columna, max_columna)
                 barcos.append(barco_manual)
-
                 self.colocar_barco(tablero, barco_manual)
                 self.tablero_local_barcos.imprimir()
-        self.jugar_ronda()
         
     def mensaje_post_colocacion():
     

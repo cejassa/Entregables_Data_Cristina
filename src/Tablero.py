@@ -30,12 +30,8 @@ class Tablero:
     # FUNCIÓN PARA COMPROBAR SI FILA Y COLUMNA SON VÁLIDAS 
     def fila_valida(self, fila):
         return (fila >= 0 and fila < self.num_filas)
-    def fila_valida_manual(self, fila):
-        return (fila > 0 and fila <= self.num_filas)
     def columna_valida(self, columna):
         return (columna >= 0 and columna < self.num_columnas)
-    def columna_valida_manual(self, columna):
-        return (columna > 0 and columna <= self.num_columnas)
 
     # FUNCIÓN PARA COMPROBAR SI EN UN PUNTO DEL TABLERO (O EN UN RANGO) HAY UN VALOR ESPECÍFICO
     def posicion_igual_a_valor(self, valor, fila, columna):
