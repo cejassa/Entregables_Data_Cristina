@@ -6,7 +6,7 @@
 Es el primer proyecto que nos lanzaron en The Bridge, tras estar dos semanas introduciéndonos en Python y una de sus librerías más importantes: **Numpy**.
 
 Para su realización se crearon las diferentes clases:
-- **Clase Tablero: **
+- **Clase Tablero:**
   · Aparecen 4 tableros, 2 para el jugador local y 2 para la IA, es decir, 4 matrices numpy
   · Los tableros quedan impresos con los índices de los números
   
